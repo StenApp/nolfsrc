@@ -22,6 +22,9 @@ Since the first public release:
   the game folder; it needs only the Perl every Mac has, and checks the
   folder, the images and every file it writes as the other installers do.
   Not yet tried on a Mac ([`docs/INSTALL.md`](docs/INSTALL.md), "Mac").
+- **No stutter at the top of a ramp, or up a ridge of terrain.** The
+  engine stepped the player up onto a slope carried on past its edge, in
+  mid-air and backwards, over and over; retail does it too. (M-P5-20)
 - **The crane in A Tenuous Lead no longer drills.** OpenMiles put the loop
   of a compressed (IMA ADPCM) sound in the wrong place, so the crane outside
   the warehouse repeated a 66 ms scrap of its sound while it moved; it now

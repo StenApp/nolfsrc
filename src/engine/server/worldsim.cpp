@@ -2661,6 +2661,71 @@ int ws_MoveCylinder(uint16 nBlock, CBounceState* pState, int bRetry)
 // %ax (allocation), and shipped's g_vMoveStart copy completes before the
 // g_vMoveEnd loads (one store-scheduling block; operator/component spellings
 // of both sums and statement order did not move it).
+#ifdef NOLFSRC_MODERN
+// M-P5-20: the highest point of a polygon over the rectangle x0..x1, z0..z1,
+// or 0 when none of it is over it. The polygon is clipped to the rectangle
+// seen from above (its height carried along each edge) and the highest of
+// what is left is the answer: for a plane over a convex region, it is at one
+// of the region's corners.
+static int ws_PolyTopOver(WorldPolyOwner* pPoly, float x0, float x1,
+                          float z0, float z1, float* pTop)
+{
+	LTVector vA[40], vB[40];
+	LTVector *pIn = vA, *pOut = vB, *pSwap;
+	uint32   nIn, nOut, i, nSide;
+	float    fLimit, fSign, fCur, fPrev, fT;
+
+	if (pPoly->m_nVertices < 3 || pPoly->m_nVertices > 32)
+		return -1;   // not ours to answer: the retail lift
+
+	for (i = 0; i < pPoly->m_nVertices; i++)
+		vA[i] = *pPoly->m_Vertices[i].m_pPos;
+	nIn = pPoly->m_nVertices;
+
+	for (nSide = 0; nSide < 4 && nIn; nSide++)
+	{
+		// x >= x0, x <= x1, z >= z0, z <= z1, as fSign * (v - fLimit) >= 0
+		fLimit = (nSide == 0) ? x0 : (nSide == 1) ? x1 : (nSide == 2) ? z0 : z1;
+		fSign  = (nSide & 1) ? -1.0f : 1.0f;
+
+		nOut  = 0;
+		fPrev = fSign * (((nSide < 2) ? pIn[nIn - 1].x : pIn[nIn - 1].z) - fLimit);
+
+		for (i = 0; i < nIn; i++)
+		{
+			const LTVector& vPrev = pIn[i ? i - 1 : nIn - 1];
+			const LTVector& vCur  = pIn[i];
+
+			fCur = fSign * (((nSide < 2) ? vCur.x : vCur.z) - fLimit);
+
+			if ((fCur >= 0.0f) != (fPrev >= 0.0f))
+			{
+				fT = fPrev / (fPrev - fCur);
+				pOut[nOut++] = vPrev + (vCur - vPrev) * fT;
+			}
+			if (fCur >= 0.0f)
+				pOut[nOut++] = vCur;
+
+			fPrev = fCur;
+		}
+
+		pSwap = pIn; pIn = pOut; pOut = pSwap;
+		nIn = nOut;
+	}
+
+	if (!nIn)
+		return 0;
+
+	*pTop = pIn[0].y;
+	for (i = 1; i < nIn; i++)
+	{
+		if (pIn[i].y > *pTop)
+			*pTop = pIn[i].y;
+	}
+	return 1;
+}
+#endif
+
 int ws_StairStep(uint16 nBlock, CBounceState* pState)
 {
 	uint16         nStack[WS_NODE_STACK];
@@ -2820,10 +2885,43 @@ int ws_StairStep(uint16 nBlock, CBounceState* pState)
 					g_pMoveState->m_pInfo->m_hPoly =
 					    g_pMoveState->m_pWorldBsp->MakeHPoly((WorldPoly*)pRec);
 
+#ifdef NOLFSRC_MODERN
+					// M-P5-20: a floor or a slope one can walk on lifts the
+					// feet onto the highest point of it that is under them.
+					// The lift was measured from the swept box's corners to
+					// the polygon's plane, wherever the corners were, and the
+					// plane goes on past the polygon: over the top edge of a
+					// ramp, or a ridge between two slopes, the corners beyond
+					// it were below that plane carried on, and the player was
+					// stepped up onto it in mid-air -- shoved back and up,
+					// falling again, over and over (retail does it too). And
+					// along the slope's normal, that is backwards, off it.
+					// Over the polygon throughout, this is retail's lift,
+					// straight up.
+					vPush.Init(0.0f, 0.0f, 0.0f);
+					if (pPlane->m_Normal.y >= g_fStepSlopeLimit)
+					{
+						float fTop;
+						int   nOver = ws_PolyTopOver(pOwner,
+						                            g_SweepPoints[1][0].x, g_SweepPoints[1][2].x,
+						                            g_SweepPoints[1][0].z, g_SweepPoints[1][2].z,
+						                            &fTop);
+
+						if (nOver >= 0)
+						{
+							fBest = (nOver && fTop > g_SweepPoints[1][0].y) ?
+							        g_SweepPoints[1][0].y - fTop : 0.0f;
+							vPush.y = -fBest;
+						}
+					}
+#endif
 					if (fBest < 0.0f)
 					{
 						vFlat = pInfo->m_Plane.m_Normal;
 
+#ifdef NOLFSRC_MODERN
+						if (vPush.y == 0.0f)
+#endif
 						vPush = vFlat * -fBest;
 
 						if (pRec->m_pOwner->m_pParent->m_nFlags & WBSP_NOSTEP)

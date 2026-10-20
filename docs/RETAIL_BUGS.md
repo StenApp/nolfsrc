@@ -70,6 +70,7 @@ in.
 * [`-nowiz` is not seen as the last argument](#-nowiz-is-not-seen-as-the-last-argument)
 * [`-NetLevel` and `-NetCALevel` set settings nothing reads](#-netlevel-and--netcalevel-set-settings-nothing-reads)
 * [The server's setup wizard never closes its find handle](#the-servers-setup-wizard-never-closes-its-find-handle)
+* [Stepping up onto a slope where it is not](#stepping-up-onto-a-slope-where-it-is-not)
 
 Every entry names the retail address it was read from, the binary, and the
 file that reproduces it. An entry is listed only once its function is
@@ -119,6 +120,30 @@ the rest, up to a millisecond a frame (`cs_UpdateAnimations`,
 `clientmgr2.cpp`, and the sprite updates in `csvis.cpp`;
 `sm_UpdateObjectTrackers`, `servermodel.cpp`), which at 300 frames a second
 is a sixth of the time.
+
+### Stepping up onto a slope where it is not
+`ws_StairStep` (lithtech.exe 0x0041a0e0, and server.dll) · `src/engine/server/worldsim.cpp`
+
+> **✅ FIXED in the modern build** (`NOLFSRC_MODERN`, MODERN.md M-P5-20): a
+> floor or a slope one can walk on lifts the feet straight up onto the
+> highest point of it that is under them.
+
+Before a player's move, the engine looks for floors the feet are moving
+into and steps the move up onto them. It finds them by walking the world's
+tree, which finds a polygon by its plane, and lifts the move by how far the
+swept box's lowest corner is below that plane, along the plane's normal. It
+never asks whether that corner is over the polygon, and the plane goes on
+past the polygon's edges. Where the ground beyond an edge is lower than the
+slope carried on -- the top of a ramp, a ridge between two slopes of
+terrain -- a corner out there is below the plane, so the player is stepped
+up onto the slope in mid-air. The lift along the normal is backwards, too,
+off the slope, so the next move does not meet it: the player falls, gravity
+adds up, and the next lift is bigger. Measured in the release build at a
+ramp in M01S03 (a slope of 1 in 2, its top edge at y 53.8, the floor beyond
+at 53): shoves of 6 to 16 units, lifting the player as high as y 72, and 44
+frames in the air; walking a ridge up a hillside in M01S04, lifts of 4 to 9
+units every few frames and 27 shoves back, the player in the air most of the
+way. A stutter at the top of a ramp and up some terrain, at any frame rate.
 
 ### Snow ignores the size of its weather volume
 `CWeatherFX::CreateSnow` (CShell.dll) · `src/game/ClientShellDLL/WeatherFX.cpp`
