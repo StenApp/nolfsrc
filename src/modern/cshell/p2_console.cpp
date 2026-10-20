@@ -259,9 +259,13 @@ static void GetPosFn(int argc, char** argv)
 	ModernLog("GetPos: %.1f %.1f %.1f", vPos.x, vPos.y, vPos.z);
 }
 
-// SetPos <x> <y> <z>: put the player there (single player: the client
-// moves its own object and the server follows), for testing a place
-// without playing to it; GetPos (or mppos) shows where one is.
+// SetPos <x> <y> <z>: put the player there (single player), for testing a
+// place without playing to it; GetPos (or mppos) shows where one is. The
+// server teleports its player object and then the client's (MID_P2_SETPOS),
+// as a respawn does. Moving the client's own object instead had the server
+// sweep its object along after it, through whatever lay between -- a
+// trigger on the way could kill the player, god mode or not -- and a move
+// down counted as a fall.
 static void SetPosFn(int argc, char** argv)
 {
 	HOBJECT hPlayer = g_pGameClientShell->GetMoveMgr()->GetObject();
@@ -273,9 +277,9 @@ static void SetPosFn(int argc, char** argv)
 	}
 
 	LTVector vPos((LTFLOAT)atof(argv[0]), (LTFLOAT)atof(argv[1]), (LTFLOAT)atof(argv[2]));
-	LTVector vZero(0.0f, 0.0f, 0.0f);
-	g_pLTClient->SetObjectPos(hPlayer, &vPos);
-	g_pPhysicsLT->SetVelocity(hPlayer, &vZero);
+	HMESSAGEWRITE hMsg = g_pLTClient->StartMessage(MID_P2_SETPOS);
+	g_pLTClient->WriteToMessageVector(hMsg, &vPos);
+	g_pLTClient->EndMessage(hMsg);
 	g_pLTClient->CPrint("Player at %.1f %.1f %.1f", vPos.x, vPos.y, vPos.z);
 }
 

@@ -27,6 +27,13 @@ void    P2Server_Update();
 // hosting the game); anyone else's is ignored.
 void    P2Server_OnConsoleCommand(HCLIENT hSender, HMESSAGEREAD hMessage);
 
+// M-P2-14: MID_P2_SETPOS. Teleports the sender's player object to the
+// position, then the client's to it, as a respawn does: nothing between
+// the two places is touched (a client-side move is swept through the
+// world by the server, which can set off a trigger on the way, and is a
+// fall if it goes down). Single player, from the local client only.
+void    P2Server_OnSetPos(HCLIENT hSender, HMESSAGEREAD hMessage);
+
 // M-P2-10: the head scale factor now (1 when big head mode is off, and
 // always 1 in multiplayer).
 LTFLOAT P2Server_BigHeadFactor();

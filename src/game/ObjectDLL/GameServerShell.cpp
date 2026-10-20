@@ -1331,6 +1331,12 @@ void CGameServerShell::OnMessage(HCLIENT hSender, uint8 messageID, HMESSAGEREAD 
 			P2Server_OnConsoleCommand(hSender, hMessage);
 		}
 		break;
+		// M-P2-14: SetPos
+		case MID_P2_SETPOS :
+		{
+			P2Server_OnSetPos(hSender, hMessage);
+		}
+		break;
 #endif
 
 		case MID_DIFFICULTY:

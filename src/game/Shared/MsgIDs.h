@@ -92,6 +92,9 @@
 // M-P2-08: a console line for the server to run; honoured only from the
 // local client (the Modernizer's number, MODERN.md)
 #define MID_CONSOLE_COMMAND_CLIENT		238	// Client to server
+// M-P2-14: SetPos -- the local player's server object teleported to a
+// position, in single player (ours)
+#define MID_P2_SETPOS					239	// Client to server
 #endif
 
 #define MID_DIFFICULTY					240 // Client to server

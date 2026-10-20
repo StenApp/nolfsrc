@@ -14,6 +14,7 @@
 #include "stdafx.h"
 #include "GameServerShell.h"
 #include "GameBase.h"
+#include "PlayerObj.h"
 #include "CVarTrack.h"
 #include "cshell/p2_log.h"
 #include "object/p2_server.h"
@@ -72,6 +73,32 @@ void P2Server_OnConsoleCommand(HCLIENT hSender, HMESSAGEREAD hMessage)
 	}
 
 	g_pLTServer->RunGameConString(szCmd);
+}
+
+
+// ----------------------------------------------------------------------- //
+//  M-P2-14
+// ----------------------------------------------------------------------- //
+
+void P2Server_OnSetPos(HCLIENT hSender, HMESSAGEREAD hMessage)
+{
+	LTVector    vPos, vZero(0.0f, 0.0f, 0.0f);
+	CPlayerObj* pPlayer;
+
+	g_pLTServer->ReadFromMessageVector(hMessage, &vPos);
+
+	if (IsMultiplayerGame() || !hSender ||
+		!(g_pLTServer->GetClientInfoFlags(hSender) & CIF_LOCAL))
+	{
+		return;
+	}
+
+	pPlayer = (CPlayerObj*)g_pLTServer->GetClientUserData(hSender);
+	if (!pPlayer || !pPlayer->m_hObject) return;
+
+	g_pLTServer->TeleportObject(pPlayer->m_hObject, &vPos);
+	g_pLTServer->SetVelocity(pPlayer->m_hObject, &vZero);
+	pPlayer->TeleportClientToServerPos();
 }
 
 
