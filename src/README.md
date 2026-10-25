@@ -5,7 +5,7 @@
 | `engine/lithtech/` (+ `engine/server/`) | `lithtech.exe`, the engine | `build/engine.sh lithtech`, `lithtech-link` |
 | `engine/server/` | `server.dll`, the game server | `build/engine.sh server`, `server-link` |
 | `engine/d3d/` | `d3d.ren`, the Direct3D renderer (Intel C/C++ 4.0) | `build/engine.sh d3d`, `d3d-link` |
-| `engine/launcher/` | `NOLF.exe`, the launcher | `build/engine.sh launcher link` |
+| `engine/launcher/` | legacy: `NOLF.exe`, the launcher; modern: `NOLFLauncher.exe` and direct-start `NOLF.exe` | `build/engine.sh launcher link` |
 | `engine/ltmsg/` | `ltmsg.dll`, the engine's message strings | `build/engine.sh ltmsg` |
 | `engine/sres/` | `sres.dll`, the server resource DLL | `build/engine.sh sres` |
 | `lithshared/` | the static libraries the above link | `build/libs.sh all` |

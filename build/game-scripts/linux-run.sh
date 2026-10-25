@@ -1,11 +1,13 @@
 #!/bin/sh
 # linux-run.sh -- start No One Lives Forever (built from source) with Wine,
-# through its launcher, NOLF.exe (ours, built from src/engine/launcher), the
-# way the retail game starts.
+# through NOLF.exe: direct start in modern builds, the launcher in legacy
+# builds (built from src/engine/launcher).
 #
 #   ./linux-run.sh [launcher args...]
 #
-# Click "Launch" (the first time, you may pick a performance setting first).
+# Modern builds start immediately and wait for the game to exit. Open
+# NOLFLauncher.exe in the same prefix for the interactive launcher.
+# Legacy builds: click "Launch" and pick a performance setting on first run.
 # The launcher writes nolfcmds.txt and starts lithtech.exe itself; Display
 # and Advanced there set the renderer, the resolution and the engine's
 # options. Arguments are handed to the launcher, which passes them on to the

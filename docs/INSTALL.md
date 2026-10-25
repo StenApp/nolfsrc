@@ -92,9 +92,10 @@ rewrites).
    ./linux-run.sh
    ```
 
-   This opens the game's launcher: click Launch. The first time, it asks
-   for a performance setting first. The launcher's Display and Advanced
-   buttons set the renderer, the resolution and the engine's options.
+   This starts the game immediately using your saved settings. To open the
+   launcher, run `wine NOLFLauncher.exe` with the same Wine prefix
+   (`WINEPREFIX=~/.wine-nolf` by default). Its Display and Advanced buttons
+   set the renderer, the resolution and the engine's options.
 
    The game uses its own Wine prefix, `~/.wine-nolf`, which is created on
    the first run, so your own prefix is left alone. Arguments go to the
@@ -120,7 +121,8 @@ No winetricks or Protontricks are needed.
    Explorer both open `.tar.gz`).
 2. Drop both disc images onto `windows-install.bat`, or put them in the game
    folder and double-click it.
-3. Start `NOLF.exe` and click Launch.
+3. Start `NOLF.exe` to play immediately. Open `NOLFLauncher.exe` to change
+   launcher settings or use its Launch button.
 
 Windows support has had less testing than Linux. The programs are not
 signed, so SmartScreen may warn before the first start. If something goes
@@ -147,7 +149,8 @@ Wine). Its data is installed in macOS itself, with `mac-install.command`.
 
 3. In CrossOver, make a new bottle (Windows 10), then use the bottle's Run
    Command, browse to the game folder's `NOLF.exe` and run it; "Save command
-   as a launcher" keeps it for next time. Click Launch.
+   as a launcher" keeps it for next time. The game starts immediately.
+   Run `NOLFLauncher.exe` in the same bottle to open the launcher.
 
 The game, its movies and its music need nothing installed in the bottle.
 If the picture is wrong, try `opengl.ren` or `d3d7.ren` in Options >

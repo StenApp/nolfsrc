@@ -189,8 +189,10 @@ what changed takes to rebuild. Each is packaged like the release game, as
 (`out/nolf-modern-release-private.tar.gz`, ...); `NOLF_ARCHIVES=public
 make ...` writes only the public one, and fails rather than skip it without
 the disc images. Play them as the release game, from the directory the
-table gives: `out/nolf-modern-release/linux-run.sh` (the launcher), or
-`build/playtest.sh out/nolf-modern-release 'Worlds\T01S01'`.
+table gives: `out/nolf-modern-release/linux-run.sh` (starts the game directly),
+or open `NOLFLauncher.exe` for the modern launcher. Modern `NOLF.exe` uses
+the same settings and game commands as the launcher and stays running until
+`lithtech.exe` exits. For a scripted test, use `build/playtest.sh out/nolf-modern-release 'Worlds\T01S01'`.
 
 The GitHub Actions workflow `.github/workflows/public-archives.yml` builds
 the release game and all three variants that way on every push to `master`

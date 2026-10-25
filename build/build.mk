@@ -444,16 +444,28 @@ $(foreach d,$(LAUNCHER)/Release $(E)/lithtech/link,$(eval $(call tool,$(d)/mss32
     python3 tools/mkimplib.py --keep-decoration $(d)/mss32dec.lib mss32.dll $$(MSS32_DECORATED) >/dev/null)))
 LAUNCHER_LINKOBJ := launcher gamedlg gamehelp dlgconfig dlgcustom dlghelp dlgsound dlgdisplay preview cdcheck dib dibmgr \
     dibpal RezFind Utils globals stdafx
-$(eval $(call tool,$(LAUNCHER)/Release/NOLF.exe,$(LAUNCHER_SRC:%.cpp=$(LAUNCHER)/Release/%.obj) $(LAUNCHER)/Release/launcher.res \
+# Modern executables share every launcher object; only their entry points
+# differ. The retail build keeps its original output and link inputs.
+LAUNCHER_BINS := $(if $(MODERN),NOLFLauncher NOLF,NOLF)
+ifneq ($(MODERN),)
+$(foreach s,launcherentry gameentry,$(eval $(call compile,$(LAUNCHER)/Release/$(s).obj,$(LAUNCHER),..\..\modern\launcher\$(s).cpp,$(ENV),$(CL),\
+    /nologo /MT /W3 /GX /O2 /D WIN32 /D NDEBUG /D _WINDOWS /c /FoRelease/,wine-plain)))
+endif
+launcher_entry = $(if $(MODERN),$(if $(filter NOLF,$(1)),gameentry,launcherentry))
+define link_launcher
+$(eval $(call tool,$(LAUNCHER)/Release/$(1).exe,$(LAUNCHER_SRC:%.cpp=$(LAUNCHER)/Release/%.obj) $(LAUNCHER)/Release/launcher.res \
+    $(if $(MODERN),$(LAUNCHER)/Release/$(call launcher_entry,$(1)).obj) \
     $(LAUNCHER)/Release/mss32.lib $(LAUNCHER)/Release/mss32dec.lib $(call lslib,RegMgr) | wine-plain,\
     cd $(LAUNCHER) && $(ENV) $(WINE) $(LINK) $(NOLFSRC_LDFLAGS) /nologo /subsystem:windows /machine:I386 \
-    /out:Release/NOLF.exe /map:Release/NOLF.map $(LAUNCHER_LINKOBJ:%=Release/%.obj) Release/launcher.res \
+    /out:Release/$(1).exe /map:Release/$(1).map $(LAUNCHER_LINKOBJ:%=Release/%.obj) $(if $(MODERN),Release/$(call launcher_entry,$(1)).obj) Release/launcher.res \
     $(call q,..\..\lithshared\out\RegMgr.lib Release\mss32dec.lib Release\mss32.lib) nafxcw.lib libcmt.lib \
     kernel32.lib user32.lib gdi32.lib advapi32.lib shell32.lib comdlg32.lib winmm.lib ole32.lib oleaut32.lib uuid.lib \
     odbc32.lib odbccp32.lib))
+endef
+$(foreach b,$(LAUNCHER_BINS),$(call link_launcher,$(b)))
 .PHONY: launcher launcher-objs
 launcher-objs: $(LAUNCHER_SRC:%.cpp=$(LAUNCHER)/Release/%.obj) $(LAUNCHER)/Release/launcher.res
-launcher: $(LAUNCHER)/Release/NOLF.exe
+launcher: $(LAUNCHER_BINS:%=$(LAUNCHER)/Release/%.exe)
 
 # NolfServ.exe, the dedicated server: an MFC dialog application (MFC linked
 # statically, RTTI on, a precompiled header, as AppWizard set it up), its

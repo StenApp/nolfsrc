@@ -104,8 +104,29 @@ int ErrorMsg(HWND hWnd, int nStringID, UINT nType)
 //
 // *********************************************************************** //
 
+#ifdef NOLFSRC_MODERN
+// Both modern executables use the same settings and command-file builder.
+static BOOL s_bDirectLaunch;
+// dib.h redefines DWORD as unsigned int; Win32 expects unsigned long here.
+static unsigned long s_nGameExitCode = ERROR_GEN_FAILURE;
+
+int ModernLauncherMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow, BOOL bDirectLaunch)
+#else
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+#endif
 {
+#ifdef NOLFSRC_MODERN
+	s_bDirectLaunch = bDirectLaunch;
+	// Resolve configs and archives beside the executable, including when a
+	// shortcut or Steam starts us with a different working directory.
+	char sDirectory[MAX_PATH];
+	DWORD nDirectoryLen = GetModuleFileName(NULL, sDirectory, sizeof(sDirectory));
+	if (!nDirectoryLen || nDirectoryLen >= sizeof(sDirectory)) return(ERROR_PATH_NOT_FOUND);
+	char* pDirectoryEnd = strrchr(sDirectory, '\\');
+	if (!pDirectoryEnd) return(ERROR_PATH_NOT_FOUND);
+	pDirectoryEnd[1] = '\0';
+	if (!SetCurrentDirectory(sDirectory)) return(GetLastError());
+#endif
 	g_hInstApp = hInstance;
 
 	AfxWinInit(hInstance, NULL, lpCmdLine, 0);
@@ -248,6 +269,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	BOOL bGoMulti = FALSE;
 	BOOL bGoGame = FALSE;
+#ifdef NOLFSRC_MODERN
+	bGoGame = s_bDirectLaunch;
+#endif
 
 	if (strstr(sCmdLine, "-GOMULTI")) bGoMulti = TRUE;
 	if (strstr(sCmdLine, "-GOGAME")) bGoGame = TRUE;
@@ -332,6 +356,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				goto Done;
 			}
 		}
+#ifdef NOLFSRC_MODERN
+		// A failed direct start reports its error and exits, without opening
+		// the launcher on the next iteration.
+		if (s_bDirectLaunch) goto Done;
+#endif
 	}
 
 Done:
@@ -390,6 +419,9 @@ Done:
 	g_pDib = NULL;
 	g_pPal = NULL;
 
+#ifdef NOLFSRC_MODERN
+	if (s_bDirectLaunch) return((int)s_nGameExitCode);
+#endif
 	return(TRUE);
 }
 
@@ -429,7 +461,13 @@ BOOL LaunchGame(char* sCmdLine, BOOL bMultiplayer)
 
 	if (g_nNumRunsCfg <= 0 || g_nNumRuns <= 0 || g_bRestoreDefaults)
 	{
+#ifdef NOLFSRC_MODERN
+		// Direct starts keep autoexec.cfg/defaults.cfg's performance settings.
+		// The interactive launcher still offers the first-run detail choice.
+		if (!s_bDirectLaunch && !DoDetailDialog(NULL)) return(FALSE);
+#else
 		if (!DoDetailDialog(NULL)) return(FALSE);
+#endif
 	}
 
 
@@ -582,7 +620,11 @@ BOOL LaunchGame(char* sCmdLine, BOOL bMultiplayer)
 
 	// Holding SHIFT shows the command line...
 
+#ifdef NOLFSRC_MODERN
+	if (!s_bDirectLaunch && (GetAsyncKeyState(VK_SHIFT) & 0x80000000))
+#else
 	if (GetAsyncKeyState(VK_SHIFT) & 0x80000000)
+#endif
 	{
 		if (MessageBox(NULL, csCmd, "Command Line String", MB_OKCANCEL) == IDCANCEL)
 		{
@@ -602,8 +644,14 @@ BOOL LaunchGame(char* sCmdLine, BOOL bMultiplayer)
 	FILE* pFile = fopen("nolfcmds.txt", "wt");
 	if (!pFile) return(FALSE);
 
+#ifdef NOLFSRC_MODERN
+	int nWritten = fprintf(pFile, "%s", sCmds);
+	int nClosed = fclose(pFile);
+	if (nWritten < 0 || nClosed != 0) return(FALSE);
+#else
 	fprintf(pFile, sCmds);
 	fclose(pFile);
+#endif
 
 	PROCESS_INFORMATION pi;
 #ifdef NOLFSRC_MODERN
@@ -642,6 +690,11 @@ BOOL LaunchGame(char* sCmdLine, BOOL bMultiplayer)
 	}
 
 	CloseHandle(pi.hThread);
+	if (s_bDirectLaunch)
+	{
+		if (WaitForSingleObject(pi.hProcess, INFINITE) == WAIT_OBJECT_0)
+			GetExitCodeProcess(pi.hProcess, &s_nGameExitCode);
+	}
 	CloseHandle(pi.hProcess);
 #else
 	if (!CreateProcess(NULL, "lithtech.exe -cmdfile nolfcmds.txt", NULL, NULL, FALSE,

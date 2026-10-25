@@ -165,6 +165,10 @@ case "${NOLFSRC_CFLAGS:-}" in
     *)                install_built src/engine/d3d/Release/d3d.ren d3d.ren ;;
 esac
 install_built src/engine/launcher/Release/NOLF.exe       NOLF.exe
+case "${NOLFSRC_CFLAGS:-}" in
+    *NOLFSRC_MODERN*) need src/engine/launcher/Release/NOLFLauncher.exe NOLFLauncher.exe
+                      install_built src/engine/launcher/Release/NOLFLauncher.exe NOLFLauncher.exe ;;
+esac
 install_built src/engine/nolfserv/Release/NolfServ.exe   NolfServ.exe
 install_built src/engine/ltmsg/Release/ltmsg.dll         ltmsg.dll
 # the game DLLs and sres.dll go in the custom/ rez directory, which overrides

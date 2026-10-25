@@ -145,7 +145,9 @@ playing your own build.
 out/nolf-legacy-release/linux-run.sh                # the launcher, NOLF.exe: click Launch
 ```
 
-The game always starts through its launcher, as the retail game does. To go
+The legacy build starts through its launcher. In modern builds, `NOLF.exe`
+(and `linux-run.sh`) starts the game immediately with the same saved settings
+and waits until it exits; `NOLFLauncher.exe` opens the launcher. To go
 straight into a level when testing a build, use `build/playtest.sh`
 (`make test` and `make shell`; its header has the options).
 
