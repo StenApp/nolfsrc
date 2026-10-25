@@ -229,6 +229,8 @@ This project builds on the work of others:
   source code (v1.003, 2001), which `src/game/` and `src/LT2/` are, and the
   _No One Lives Forever 2_ source release, from which much of
   `src/lithshared/` is adapted.
+- [StenApp](https://github.com/StenApp) for generously sharing his invaluable,
+  in-depth knowledge of all things NOLF and LithTech.
 - **NOLF Modernizer** by HeyThereCoffeee (haekb):
   <https://github.com/haekb/nolf1-modernizer>. Most of the modern build's
   fixes and features were found and designed there; `docs/MODERN.md` names
