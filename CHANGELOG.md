@@ -12,6 +12,13 @@ covers each change in detail, under its item number (M-P1-01 and so on).
 
 Since the first public release:
 
+- **No more getting stuck on Rescue Attempt's bridges.** Walking anywhere
+  but down the middle, the player could stick against the railings and
+  not move on. The engine's physics has only ever run at the reduced
+  floating-point precision the original renderer set every frame; the
+  modern renderers left the processor at full precision, and the
+  collision tests came out differently. They now set it as the original
+  did. (issue #43)
 - **Sound effects at retail loudness.** OpenMiles played most sounds
   1.5-3 dB louder than Miles 6.0i (its volume curve was approximated, and
   it did not round as Miles does); its volume, master volume and pan now

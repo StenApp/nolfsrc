@@ -1367,7 +1367,9 @@ bool rd_CreateDevice(void* hWnd, uint32_t nWidth, uint32_t nHeight, bool bWindow
     s_pp.AutoDepthStencilFormat = D3DFMT_D24S8;
     s_pp.PresentationInterval = nSwapInterval ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
 
-    // FPU_PRESERVE: the engine wants its double precision.
+    // FPU_PRESERVE: Direct3D leaves the FPU alone; RenderScene sets the
+    // single precision the engine runs at, as retail d3d.ren does
+    // (mr_SetFPUPrecision24, mr_scene.cpp).
     HRESULT hr = s_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, (HWND)hWnd,
                                       D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_FPU_PRESERVE, &s_pp, &s_pDev);
     if (FAILED(hr))

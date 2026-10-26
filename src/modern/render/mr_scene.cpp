@@ -1325,8 +1325,27 @@ static void mr_ScreenPasses(SceneDesc* pScene)
 
 // ---- RenderScene ---------------------------------------------------------------------
 
+// The x87 FPU's precision to 24 bits (single), as retail d3d.ren sets it at
+// the start of every scene it renders (`fstcw ; andw $0xfcff ; fldcw`,
+// src/engine/d3d/w4_1001eb90_os.cpp) and lithtech.exe once at startup
+// (clu_dsi_InitGame). The engine's physics runs on the same thread and was
+// only ever run at that precision: at double precision (which this DLL's
+// runtime or the graphics driver leaves behind) its borderline tests come
+// out the other way, and the player got stuck on Rescue Attempt's bridges
+// (issue #43).
+static void mr_SetFPUPrecision24()
+{
+#if defined(__i386__)
+    unsigned short nCW;
+    __asm__ __volatile__("fnstcw %0" : "=m"(nCW));
+    nCW &= 0xfcff;
+    __asm__ __volatile__("fldcw %0" : : "m"(nCW));
+#endif
+}
+
 LTBOOL mr_RenderScene(SceneDesc* pScene)
 {
+    mr_SetFPUPrecision24();
     if (!g.bContext || !pScene)
         return 0;
     if (g.bInOptimized2D)
