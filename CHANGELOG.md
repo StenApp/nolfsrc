@@ -17,6 +17,12 @@ Since the first public release:
   put right for single player, and multiplayer now follows the same frame
   rate limit (Interface options). Measured on a dedicated server: the same
   rate of fire at 60 and at 140 frames a second, every shot accepted.
+- **A headless Linux server no longer breaks the game on the same
+  machine.** `linux-server.sh --headless` (or run with no display) shared
+  the game's Wine prefix, whose desktop then lived on the server's
+  invisible display; the game, started afterwards, crashed as soon as it
+  confined the mouse (on joining a game, say). The headless server now
+  keeps its own prefix, `~/.wine-nolf-server`.
 - **No more getting stuck on Rescue Attempt's bridges.** Walking anywhere
   but down the middle, the player could stick against the railings and
   not move on. The engine's physics has only ever run at the reduced

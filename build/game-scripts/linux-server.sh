@@ -18,7 +18,10 @@
 #
 # Environment:
 #   WINEPREFIX   the Wine prefix to use (default: $HOME/.wine-nolf, the one
-#                linux-run.sh uses)
+#                linux-run.sh uses; $HOME/.wine-nolf-server when headless --
+#                a prefix's Wine desktop lives on one display, and a game
+#                started in a prefix whose desktop is on the server's
+#                virtual display crashes as it confines the mouse)
 #   WINE         the wine binary (default: wine)
 #   WINEDEBUG    Wine's log channels (default: -all)
 #
@@ -45,7 +48,11 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-WINEPREFIX="${WINEPREFIX:-$HOME/.wine-nolf}"
+if [ -n "$HEADLESS" ]; then
+    WINEPREFIX="${WINEPREFIX:-$HOME/.wine-nolf-server}"
+else
+    WINEPREFIX="${WINEPREFIX:-$HOME/.wine-nolf}"
+fi
 WINEDEBUG="${WINEDEBUG:--all}"
 export WINEPREFIX WINEDEBUG
 WINE="${WINE:-wine}"

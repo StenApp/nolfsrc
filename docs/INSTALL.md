@@ -257,7 +257,15 @@ The modern build adds to that:
 
 The server answers on UDP port 27888 (or the `-NetPort` you give it): let
 it through the firewall for players on other machines. It runs until Stop
-Server is clicked (or the process is ended).
+Server is clicked (or the process is ended). Players on your own network
+need nothing more. For the internet's server list, forward that UDP port on
+your router to the server: the server reports to the master server itself,
+but each player's browser then asks the server for its details directly,
+and joins on the same port.
+
+Run headless (`--headless`, or with no display), `linux-server.sh` keeps a
+Wine prefix of its own, `~/.wine-nolf-server`, so a game started on the same
+machine is not tied to the server's invisible display.
 
 In the legacy build, `-nowiz` is only read when another argument follows
 it (a bug of the original server, which `linux-server.sh` works around).
