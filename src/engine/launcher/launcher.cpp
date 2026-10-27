@@ -51,6 +51,9 @@ int			g_bDisableJoystick;		// 0x4468
 int			g_bDisableTripBuf;		// 0x446c
 int			g_bDisableCursor;		// 0x4470
 int			g_bDisableLoadscreen;	// 0x4474
+#ifdef NOLFSRC_MODERN
+int			g_bDisableLauncherSound;	// M-P1-29
+#endif
 
 int			s_nLastRandom = 1;		// 0x308 (initialized data)
 
@@ -222,6 +225,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	g_bDisableTripBuf    = g_pRegMgr->Get("Disable TripBuf", 0);
 	g_bDisableCursor     = g_pRegMgr->Get("Disable Cursor", 0);
 	g_bDisableLoadscreen = g_pRegMgr->Get("Disable Loadscreen", 0);
+#ifdef NOLFSRC_MODERN
+	// M-P1-29: the launcher's sound as it opens, on unless switched off
+	g_bDisableLauncherSound = g_pRegMgr->Get("Disable Launcher Sound", 0);
+#endif
 
 	char sBuf[256];
 	UINT dwSize = 256;
@@ -381,6 +388,9 @@ Done:
 	g_pRegMgr->Set("Disable TripBuf", g_bDisableTripBuf);
 	g_pRegMgr->Set("Disable Cursor", g_bDisableCursor);
 	g_pRegMgr->Set("Disable Loadscreen", g_bDisableLoadscreen);
+#ifdef NOLFSRC_MODERN
+	g_pRegMgr->Set("Disable Launcher Sound", g_bDisableLauncherSound);
+#endif
 	g_pRegMgr->Set("Language", g_csLanguage);
 
 

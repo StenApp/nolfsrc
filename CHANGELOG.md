@@ -12,6 +12,8 @@ covers each change in detail, under its item number (M-P1-01 and so on).
 
 Since the first public release:
 
+- **The launcher's sound can be switched off**: Advanced options, "Disable
+  launcher sound". It still plays by default. (issue #47)
 - **The launcher keeps its settings in a file**, `launcher.ini` in the game
   directory, not the Windows registry, which under Wine and Proton is lost
   with the prefix. (issue #46; settings saved before are not carried over)

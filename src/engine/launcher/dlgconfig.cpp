@@ -246,6 +246,10 @@ BOOL CALLBACK AdvancedDlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 			CheckDlgButton(hWnd, 1058, g_bDisableTripBuf != 0);
 			CheckDlgButton(hWnd, 1071, g_bDisableCursor != 0);
 			CheckDlgButton(hWnd, 1073, g_bDisableLoadscreen != 0);
+#ifdef NOLFSRC_MODERN
+			// M-P1-29
+			CheckDlgButton(hWnd, 1090, g_bDisableLauncherSound != 0);
+#endif
 
 			SetDlgItemText(hWnd, 1042, g_csCommands);
 
@@ -271,6 +275,9 @@ BOOL CALLBACK AdvancedDlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 				g_bDisableTripBuf    = IsDlgButtonChecked(hWnd, 1058) == 1;
 				g_bDisableCursor     = IsDlgButtonChecked(hWnd, 1071) == 1;
 				g_bDisableLoadscreen = IsDlgButtonChecked(hWnd, 1073) == 1;
+#ifdef NOLFSRC_MODERN
+				g_bDisableLauncherSound = IsDlgButtonChecked(hWnd, 1090) == 1;
+#endif
 
 				EndDialog(hWnd, 1);
 				return(TRUE);

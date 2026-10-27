@@ -216,6 +216,10 @@ BOOL InitAdvOptList(HWND hWnd)
 	AddHelpItem(hList, "Disable triple buffering",     45, 79);
 	AddHelpItem(hList, "Disable hardware cursor",      46, 80);
 	AddHelpItem(hList, "Disable animated load screen", 47, 81);
+#ifdef NOLFSRC_MODERN
+	// M-P1-29
+	AddHelpItem(hList, "Disable launcher sound",       85, 86);
+#endif
 	AddHelpItem(hList, "Restore defaults",             48, 82);
 	AddHelpItem(hList, "Command-line",                 49, 83);
 

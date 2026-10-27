@@ -255,6 +255,9 @@ extern int			g_bDisableJoystick;
 extern int			g_bDisableTripBuf;
 extern int			g_bDisableCursor;
 extern int			g_bDisableLoadscreen;
+#ifdef NOLFSRC_MODERN
+extern int			g_bDisableLauncherSound;	// M-P1-29
+#endif
 
 extern char			g_sDir[256];
 extern char			g_sCdRomPath[64];

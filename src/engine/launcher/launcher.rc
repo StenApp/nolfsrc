@@ -85,6 +85,35 @@ BEGIN
     CONTROL         "High detail will provide the best visual quality, but game performance may suffer on slower systems.  The Recommended System Specs:  PIII 750 MHz, 256MB RAM, 64MB Direct 3D Compatible Video Card.",IDC_STATIC,"Static",0x20000,12,180,250,27
 END
 
+#ifdef NOLFSRC_MODERN
+// M-P1-29: a row more, for "Disable launcher sound"
+ADVANCED DIALOG DISCARDABLE 0, 0, 300, 229
+STYLE WS_POPUP | WS_CAPTION | WS_SYSMENU | DS_CENTER | DS_MODALFRAME | DS_SETFONT
+CAPTION "NOLF - Advanced Options"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Disable sound",1050,"Button",0x10003,16,47,120,10
+    CONTROL         "Disable music",1051,"Button",0x10003,16,58,120,10
+    CONTROL         "Disable movies",1055,"Button",0x10003,16,69,120,10
+    CONTROL         "Disable fog",1057,"Button",0x10003,16,80,120,10
+    CONTROL         "Disable joysticks",1067,"Button",0x10003,164,47,120,10
+    CONTROL         "Disable triple buffering",1058,"Button",0x10003,164,58,120,10
+    CONTROL         "Restore  default settings",1054,"Button",0x10003,16,124,120,10
+    CONTROL         "",1042,"Edit",0x810080,15,165,270,14
+    CONTROL         "Always specify these command-line parameters",1043,"Button",0x10003,15,181,270,10
+    CONTROL         "OK",1,"Button",0x10001,16,208,45,14
+    CONTROL         "Cancel",2,"Button",0x10000,184,208,45,14
+    CONTROL         "&Help",1069,"Button",0x10000,241,208,45,14
+    CONTROL         "Disable",IDC_STATIC,"Button",0x7,7,32,286,72
+    CONTROL         "Command-Line",IDC_STATIC,"Button",0x7,7,150,286,45
+    CONTROL         "Restore",IDC_STATIC,"Button",0x7,7,111,286,31
+    CONTROL         "WARNING!  Some of the advanced options may cause the game to run worse (or not at all) on your particular system configuration.  Click the Help button for more info.",IDC_STATIC,"Static",0x20000,7,7,286,20
+    CONTROL         "Disable hardware cursor",1071,"Button",0x10003,164,69,120,10
+    CONTROL         "Disable animated load screen.",1073,"Button",0x10003,164,80,120,10
+    CONTROL         "Disable launcher sound",1090,"Button",0x10003,16,91,120,10
+    CONTROL         "&Customize",1070,"Button",0x10000,71,208,45,14
+END
+#else
 ADVANCED DIALOG DISCARDABLE 0, 0, 300, 218
 STYLE WS_POPUP | WS_CAPTION | WS_SYSMENU | DS_CENTER | DS_MODALFRAME | DS_SETFONT
 CAPTION "NOLF - Advanced Options"
@@ -110,6 +139,7 @@ BEGIN
     CONTROL         "Disable animated load screen.",1073,"Button",0x10003,164,80,120,10
     CONTROL         "&Customize",1070,"Button",0x10000,71,197,45,14
 END
+#endif
 
 ADV_CUSTOM DIALOG DISCARDABLE 0, 0, 292, 154
 STYLE WS_POPUP | WS_CAPTION | WS_SYSMENU | DS_CENTER | DS_MODALFRAME | DS_SETFONT
@@ -220,3 +250,11 @@ BEGIN
     83      "Command-line"
     84      "English"
 END
+#ifdef NOLFSRC_MODERN
+// M-P1-29: Advanced options help
+STRINGTABLE DISCARDABLE
+BEGIN
+    85      "This turns off the sound the launcher plays as it opens."
+    86      "Disable launcher sound"
+END
+#endif

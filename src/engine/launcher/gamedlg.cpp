@@ -343,7 +343,13 @@ BOOL InitGameDlg(HWND hWnd)
 		}
 	}
 
+#ifdef NOLFSRC_MODERN
+	// M-P1-29: unless Advanced options switch it off
+	if (!g_bDisableLauncherSound)
+		PlayMusic(g_sGame);
+#else
 	PlayMusic(g_sGame);
+#endif
 
 	HWND hCtrl = GetDlgItem(hWnd, 1011);
 	if (hCtrl)
