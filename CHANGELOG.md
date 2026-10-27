@@ -12,6 +12,11 @@ covers each change in detail, under its item number (M-P1-01 and so on).
 
 Since the first public release:
 
+- **Multiplayer at any frame rate.** A multiplayer game was held at 60
+  frames a second, so that faster machines did not fire faster; that was
+  put right for single player, and multiplayer now follows the same frame
+  rate limit (Interface options). Measured on a dedicated server: the same
+  rate of fire at 60 and at 140 frames a second, every shot accepted.
 - **No more getting stuck on Rescue Attempt's bridges.** Walking anywhere
   but down the middle, the player could stick against the railings and
   not move on. The engine's physics has only ever run at the reduced
@@ -157,9 +162,10 @@ Since the first public release:
 
 ### Frame rate and timing
 
-- **High frame rates.** Single player runs at up to 240 frames a second by
-  default (60, 120, 144, 240 or unlimited); multiplayer stays at 60, so
-  everyone fires at the same rate. (M-P1-01, M-P1-02, M-P1-23, M-P1-25)
+- **High frame rates.** The game runs at up to 240 frames a second by
+  default (60, 120, 144, 240 or unlimited), in single player and
+  multiplayer; weapons fire at the same rate at any of them. (M-P1-01,
+  M-P1-02, M-P1-23, M-P1-25, M-P6-15)
 - **The game keeps real time at any frame rate.** In retail, above 100
   frames a second the world ran fast. Animations, physics, particle systems,
   vehicles, and climbing out of water now behave the same at any rate.

@@ -45,7 +45,7 @@ bool	P1Config_IntelFixRenderer(const char* pRenderDll);	// M-P1-10 applies to it
 
 float	P1Timing_GetTime();							// seconds, high resolution
 void	P1Timing_SuspendFrameLimit(bool bSuspend);	// while the loading screen runs
-void	P1Timing_EndFrame(bool bMultiplayer);		// end of each client frame
+void	P1Timing_EndFrame();						// end of each client frame
 void	P1Timing_SendDontLockServer(bool bHosting);	// M-P1-02, on joining a game
 
 // p1_input.cpp -- M-P1-03 raw mouse look.

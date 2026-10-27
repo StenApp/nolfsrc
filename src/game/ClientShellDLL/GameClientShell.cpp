@@ -1920,8 +1920,8 @@ void CGameClientShell::PostUpdate()
 
 	m_InterfaceMgr.PostUpdate();
 #ifdef NOLFSRC_MODERN
-	// M-P1-01: 60 fps frame limiter (FramerateLock; always in multiplayer)
-	P1Timing_EndFrame(IsMultiplayerGame() ? true : false);
+	// M-P1-01, M-P1-25: the frame limiter (FramerateLimit)
+	P1Timing_EndFrame();
 #endif
 }
 

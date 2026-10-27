@@ -42,7 +42,7 @@ the modern build.
 
 | Variable | Default | What it does |
 |---|---|---|
-| `FramerateLimit` | 240 | The most frames a second in single player; 0 is no limit. Multiplayer is always held at 60, and loading is never limited. Interface options: "Frame rate limit" (60, 120, 144, 240, unlimited). |
+| `FramerateLimit` | 240 | The most frames a second, in single player and multiplayer; 0 is no limit. Loading is never limited. Interface options: "Frame rate limit" (60, 120, 144, 240, unlimited). |
 | `ShowFramerate` | 0 | 1 draws a frame-rate counter at the bottom left. Interface options. |
 | `UIScale` | 0.5 | HUD size, times the screen's height ratio (never smaller than retail, at most 4). Interface options: "HUD size". |
 | `RestrictCinematicsTo4x3` | 0 | 1 puts black bars beside cinematics on screens wider than 4:3. Interface options. |

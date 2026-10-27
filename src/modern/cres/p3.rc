@@ -11,7 +11,7 @@ BEGIN
     IDS_P3_HUD_SCALE            "HUD size"
     IDS_P3_HELP_HUD_SCALE       "How large the health, armor, ammo and other HUD displays are drawn"
     IDS_P3_FRAMERATE_LOCK       "Frame rate limit"
-    IDS_P3_HELP_FRAMERATE_LOCK  "The most frames per second the game draws. Multiplayer is always held at 60."
+    IDS_P3_HELP_FRAMERATE_LOCK  "The most frames per second the game draws."
     IDS_P3_FPS_UNLOCKED         "Unlimited"
     IDS_P3_SHOW_FRAMERATE       "Frame rate counter"
     IDS_P3_HELP_SHOW_FRAMERATE  "Show the current frame rate in the lower left corner"

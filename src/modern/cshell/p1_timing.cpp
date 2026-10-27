@@ -13,11 +13,12 @@
 //                    M-P1-23 put right what went wrong in single player
 //                    (the server's clock, the animations' milliseconds,
 //                    the engine clock, per-frame physics and effects), so
-//                    single player is held at FramerateLimit frames a
-//                    second (M-P1-25: 60, 120, 144, 240 -- the default --
-//                    or 0, none), for high refresh rate screens;
-//                    multiplayer, where weapons fire faster at a higher
-//                    frame rate, always at 60.  The loading screen
+//                    the game is held at FramerateLimit frames a second
+//                    (M-P1-25: 60, 120, 144, 240 -- the default -- or 0,
+//                    none), for high refresh rate screens.  Multiplayer
+//                    too (M-P6-15): it was held at 60 because weapons
+//                    fired faster at a higher frame rate, which M-P1-23's
+//                    animation clock put right.  The loading screen
 //                    suspends it.
 //           M-P1-02  The hosting client tells its own server not to limit
 //                    as well (they share one loop).
@@ -33,8 +34,6 @@
 
 namespace
 {
-	const int		kMultiplayerFPS		= 60;
-
 	bool			s_bInit				= false;
 	LARGE_INTEGER	s_liFreq;			// counts per second (0: no counter)
 	LARGE_INTEGER	s_liStart;			// GetTime's zero
@@ -79,11 +78,11 @@ void P1Timing_SuspendFrameLimit(bool bSuspend)
 	InterlockedExchange((LONG*)&s_nSuspended, bSuspend ? 1 : 0);
 }
 
-void P1Timing_EndFrame(bool bMultiplayer)
+void P1Timing_EndFrame()
 {
 	Init();
 
-	int nFPS = bMultiplayer ? kMultiplayerFPS : P1Config_FramerateLimit();
+	int nFPS = P1Config_FramerateLimit();
 
 	if (!s_liFreq.QuadPart || s_nSuspended || nFPS <= 0)
 	{
