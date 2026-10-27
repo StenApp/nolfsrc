@@ -85,6 +85,10 @@
 #                         autoexec.cfg (lines like "UIScale" "1.000000")
 #   PLAYTEST_SAVES=<dir>  start a scripted run with a copy of these saved
 #                         games as its Save/ (instead of none)
+#   PLAYTEST_ARGS="..."   more of the game's command line, before the ++
+#                         settings (e.g. "+connect 127.0.0.1:27888" to join
+#                         a server; the line's end is no place for a value,
+#                         the engine takes the newline as part of it)
 # The default keys (defctrls.cfg): WASD move, arrows turn, Space jump,
 # C duck, F / mouse 1 fire, R reload, Shift_L next weapon, 1-0 weapons,
 # E activate, F6 quicksave, F9 quickload, Escape menu.
@@ -162,6 +166,12 @@ if [ -n "${PLAYTEST_RES:-}" ]; then
     RW=${PLAYTEST_RES%x*}; RH=${PLAYTEST_RES#*x}
     CMDS="$(echo "$CMDS" | sed -E "s/\+\+screenwidth [0-9]+/++screenwidth $RW/; s/\+\+screenheight [0-9]+/++screenheight $RH/; s/\+\+bitdepth [0-9]+/++bitdepth 32/")"
     SCREEN="$(( RW + 200 > 1024 ? RW + 200 : 1024 ))x$(( RH + 200 > 768 ? RH + 200 : 768 ))"
+fi
+if [ -n "${PLAYTEST_ARGS:-}" ]; then
+    case "$CMDS" in
+        *" ++"*) CMDS="${CMDS%% ++*} $PLAYTEST_ARGS ++${CMDS#* ++}" ;;
+        *) CMDS="$CMDS $PLAYTEST_ARGS" ;;
+    esac
 fi
 if [ "$WORLD" = - ]; then printf '%s\n' "$CMDS" > "$RUN/nolfcmds.txt"
 else printf '%s +runworld %s\n' "$CMDS" "$WORLD" > "$RUN/nolfcmds.txt"; fi
