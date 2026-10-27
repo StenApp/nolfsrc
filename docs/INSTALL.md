@@ -207,6 +207,7 @@ If you get stuck in the level geometry, `mpclip` lets you fly out.
 |---|---|
 | `autoexec.cfg` | Your settings and key bindings, rewritten when the game exits. Delete it to start from the defaults (`defaults.cfg`). |
 | `Save/` | Saved games. |
+| `launcher.ini` | The launcher's settings (its Advanced options, the custom archives to load, the command line), in the modern build; the original kept them in the Windows registry. |
 | `modern.log` | The modern build's log, emptied each run. Attach it when you report a problem. |
 | `NetHost.txt`, `modern-server.log` | The dedicated server's settings, and its log in the modern build (below). |
 

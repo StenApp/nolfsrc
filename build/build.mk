@@ -450,15 +450,22 @@ LAUNCHER_BINS := $(if $(MODERN),NOLFLauncher NOLF,NOLF)
 ifneq ($(MODERN),)
 $(foreach s,launcherentry gameentry,$(eval $(call compile,$(LAUNCHER)/Release/$(s).obj,$(LAUNCHER),..\..\modern\launcher\$(s).cpp,$(ENV),$(CL),\
     /nologo /MT /W3 /GX /O2 /D WIN32 /D NDEBUG /D _WINDOWS /c /FoRelease/,wine-plain)))
+# M-P1-28: CRegMgr keeping its values in launcher.ini, in place of
+# RegMgr.lib (for NolfServ.exe too)
+$(eval $(call compile,$(LAUNCHER)/Release/p1_settings.obj,$(LAUNCHER),..\..\modern\launcher\p1_settings.cpp,$(ENV),$(CL),\
+    /nologo /MT /W3 /O2 /D WIN32 /D NDEBUG /D _WINDOWS /D NO_PRAGMA_LIBS /I ..\..\LT2\lithshared\incs /c /FoRelease/,wine-plain))
 endif
+# The settings: the registry (RegMgr.lib), or the modern build's file
+LAUNCHER_REGOBJ := $(if $(MODERN),$(LAUNCHER)/Release/p1_settings.obj,$(call lslib,RegMgr))
+LAUNCHER_REGLINK = $(call q,$(if $(MODERN),$(1)p1_settings.obj,..\..\lithshared\out\RegMgr.lib))
 launcher_entry = $(if $(MODERN),$(if $(filter NOLF,$(1)),gameentry,launcherentry))
 define link_launcher
 $(eval $(call tool,$(LAUNCHER)/Release/$(1).exe,$(LAUNCHER_SRC:%.cpp=$(LAUNCHER)/Release/%.obj) $(LAUNCHER)/Release/launcher.res \
     $(if $(MODERN),$(LAUNCHER)/Release/$(call launcher_entry,$(1)).obj) \
-    $(LAUNCHER)/Release/mss32.lib $(LAUNCHER)/Release/mss32dec.lib $(call lslib,RegMgr) | wine-plain,\
+    $(LAUNCHER)/Release/mss32.lib $(LAUNCHER)/Release/mss32dec.lib $(LAUNCHER_REGOBJ) | wine-plain,\
     cd $(LAUNCHER) && $(ENV) $(WINE) $(LINK) $(NOLFSRC_LDFLAGS) /nologo /subsystem:windows /machine:I386 \
     /out:Release/$(1).exe /map:Release/$(1).map $(LAUNCHER_LINKOBJ:%=Release/%.obj) $(if $(MODERN),Release/$(call launcher_entry,$(1)).obj) Release/launcher.res \
-    $(call q,..\..\lithshared\out\RegMgr.lib Release\mss32dec.lib Release\mss32.lib) nafxcw.lib libcmt.lib \
+    $(call LAUNCHER_REGLINK,Release\) $(call q,Release\mss32dec.lib Release\mss32.lib) nafxcw.lib libcmt.lib \
     kernel32.lib user32.lib gdi32.lib advapi32.lib shell32.lib comdlg32.lib winmm.lib ole32.lib oleaut32.lib uuid.lib \
     odbc32.lib odbccp32.lib))
 endef
@@ -493,10 +500,10 @@ $(eval $(call tool,$(NOLFSERV)/Release/nolfserv.res,$(NOLFSERV)/nolfserv.rc $(NO
 $(eval $(call tool,$(NOLFSERV)/link/server.lib,$(NOLFSERV)/link/server.def | wine-plain,\
     cd $(NOLFSERV) && $(ENV) $(WINE) $(LIBEXE) /nologo /machine:i386 '/def:link\server.def' '/out:link\server.lib' >/dev/null))
 $(eval $(call tool,$(NOLFSERV)/Release/NolfServ.exe,$(NOLFSERV_OBJ) $(NOLFSERV)/Release/nolfserv.res $(NOLFSERV)/link/server.lib \
-    $(call lslib,CryptMgr) $(call lslib,RegMgr) $(call lslib,ButeMgr) | wine-plain,\
+    $(call lslib,CryptMgr) $(LAUNCHER_REGOBJ) $(call lslib,ButeMgr) | wine-plain,\
     cd $(NOLFSERV) && $(ENV) $(WINE) $(LINK) $(NOLFSRC_LDFLAGS) /nologo /subsystem:windows /machine:I386 \
     /out:Release/NolfServ.exe /map:Release/NolfServ.map $(NOLFSERV_OBJ:$(NOLFSERV)/%=%) Release/nolfserv.res \
-    winmm.lib $(call q,link\server.lib ..\..\lithshared\out\CryptMgr.lib ..\..\lithshared\out\RegMgr.lib ..\..\lithshared\out\ButeMgr.lib) \
+    winmm.lib $(call q,link\server.lib ..\..\lithshared\out\CryptMgr.lib) $(call LAUNCHER_REGLINK,..\launcher\Release\) $(call q,..\..\lithshared\out\ButeMgr.lib) \
     /nodefaultlib:libcimt.lib $(call q,$(call wz,$(TC))\$(LIBCIMT_RTM)) winmm.lib))
 .PHONY: nolfserv nolfserv-objs
 nolfserv-objs: $(NOLFSERV_OBJ) $(NOLFSERV)/Release/nolfserv.res

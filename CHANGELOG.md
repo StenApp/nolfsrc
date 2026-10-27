@@ -12,6 +12,9 @@ covers each change in detail, under its item number (M-P1-01 and so on).
 
 Since the first public release:
 
+- **The launcher keeps its settings in a file**, `launcher.ini` in the game
+  directory, not the Windows registry, which under Wine and Proton is lost
+  with the prefix. (issue #46; settings saved before are not carried over)
 - **Multiplayer at any frame rate.** A multiplayer game was held at 60
   frames a second, so that faster machines did not fire faster; that was
   put right for single player, and multiplayer now follows the same frame

@@ -93,18 +93,21 @@ KEY='HKLM\Software\Monolith Productions\No One Lives Forever\1.0'
 # (A 32-bit prefix has one view; the /reg:64 write then fails, harmlessly.)
 reg() { "$WINE" reg add "$@" /reg:32 /f >/dev/null 2>&1
         "$WINE" reg add "$@" /reg:64 /f >/dev/null 2>&1 || true; }
-# The movies: off with RAD's binkw32.dll, which misrenders or stalls under
-# many Wine setups; on with the modern build's own player. The release
-# build's window: see the header.
+# The release build's movies: off, as RAD's binkw32.dll misrenders or
+# stalls under many Wine setups (the modern build has its own player). The
+# release build's window: see the header.
 MOVIES_OFF=1
 MODE="++windowed 1 ++screenwidth 640 ++screenheight 480 ++bitdepth 16"
 if [ $MODERN = 1 ]; then
-    MOVIES_OFF=0
     MODE=""
 fi
-reg "$KEY" /v 'Update Command Line'  /t REG_SZ /d '-rez nolfu003.rez'
-reg "$KEY" /v 'Content Command Line' /t REG_SZ /d '-rez nolfgoty.rez -rez custom'
-reg "$KEY" /v 'Disable Movies'       /t REG_DWORD /d $MOVIES_OFF
+# (The modern launcher reads none of this: it keeps its settings in
+# launcher.ini, and finds the archives itself.)
+if [ $MODERN = 0 ]; then
+    reg "$KEY" /v 'Update Command Line'  /t REG_SZ /d '-rez nolfu003.rez'
+    reg "$KEY" /v 'Content Command Line' /t REG_SZ /d '-rez nolfgoty.rez -rez custom'
+    reg "$KEY" /v 'Disable Movies'       /t REG_DWORD /d $MOVIES_OFF
+fi
 # The release build's CD-ROM drive (n:, see above). Wine reads the drive
 # types when its server starts, so the first time the drive is set the
 # server is restarted, or that run would still find no CD-ROM. Only then:
