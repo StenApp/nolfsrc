@@ -32,9 +32,10 @@ TEST_RENDERERS ?= d3d7.ren d3d9.ren opengl.ren
 # Parallel compile jobs inside the build (build/build.mk); empty: one per CPU
 JOBS ?=
 
-# The NOLF Source Code v1.003 release, for scoring the lithshared libraries
-# against its prebuilt .libs (progress/README.md). Optional.
-NOLF_SOURCE ?=
+# Monolith's prebuilt lithshared libraries, which make progress scores ours
+# against (progress/README.md): their copy in progress/reference/, or the
+# NOLF Source Code v1.003 release
+NOLF_SOURCE ?= progress/reference
 SRC_MOUNT := $(if $(NOLF_SOURCE),-v $(realpath $(NOLF_SOURCE)):/nolfsource:ro -e NOLF_SOURCE=/nolfsource)
 
 DOCKER_RUN = docker run --rm --init --name $(CONTAINER) \
@@ -75,8 +76,8 @@ help:
 	@echo
 	@echo "Variables: TEST_LEVELS=\"$(TEST_LEVELS)\", TEST_RES=<WxH>, JOBS=<n> (parallel compiles; default one per CPU)"
 	@echo "           NOLF_ARCHIVES=\"private public\" (the archives build/package.sh writes)"
-	@echo "           NOLF_SOURCE=<dir> (the NOLF Source Code v1.003 release, for"
-	@echo "           make progress), COMPLETE=1, COVERED=1, ACCEPT_LOSSES=1 (progress/README.md)"
+	@echo "           NOLF_SOURCE=<dir> (Monolith's prebuilt libraries for make progress;"
+	@echo "           default progress/reference), COMPLETE=1, COVERED=1, ACCEPT_LOSSES=1 (progress/README.md)"
 
 game: check-toolchain retail
 	$(DOCKER_RUN) bash build/all.sh

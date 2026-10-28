@@ -8,8 +8,8 @@ generated from it.
 
 ```sh
 make                                     # build (the scoring reads its output)
-make progress NOLF_SOURCE=<dir>          # score it; fails on any regression
-make progress-update NOLF_SOURCE=<dir>   # record the score here and in README.md
+make progress                            # score it; fails on any regression
+make progress-update                     # record the score here and in README.md
 ```
 
 This is the reference. For a walk-through -- what to run when, what the
@@ -28,7 +28,7 @@ by name):
 | Target | Compared against | Our side |
 |---|---|---|
 | `lithtech.exe`, `server.dll`, `d3d.ren`, `NOLF.exe`, `NolfServ.exe` | the retail images, extracted from disc 2 into `out/reference/` | `src/engine/*/Release/*.obj` (plus the lithshared libraries each links; `NolfServ.exe`'s ButeMgr is the MFC flavour, which the source release has no prebuilt copy of and is scored only here) |
-| `StdLith`, `CryptMgr`, `RegMgr`, `MFCStub`, `ButeMgrNoMFC`, `ltguimgr_LT2`, `LithFontMgr_LT2` | Monolith's prebuilt `.lib`s from the NOLF Source Code v1.003 release (`NOLF_SOURCE`) | `src/lithshared/out/*.lib` |
+| `StdLith`, `CryptMgr`, `RegMgr`, `MFCStub`, `ButeMgrNoMFC`, `ltguimgr_LT2`, `LithFontMgr_LT2` | Monolith's prebuilt `.lib`s from the NOLF Source Code v1.003 release (`reference/`, or `NOLF_SOURCE`) | `src/lithshared/out/*.lib` |
 | `CShell.dll`, `Object.lto` | the Game of the Year copies in disc 1's `NOLFGOTY.REZ` (the ones the GOTY install runs), extracted into `out/reference/` | `src/game/*/Final_Release/*.obj` (plus the lithshared libraries each links) |
 | `CRes.dll` | the same archive's `CRES.dll` | `src/game/ClientRes/Release/CRes.dll`, resource by resource |
 | `<image>:rsrc` (`lithtech.exe`, `server.dll`, `d3d.ren`, `NOLF.exe`, `NolfServ.exe`, `ltmsg.dll`, `sres.dll`) | the retail images' resources (`sres.dll`'s out of `NOLF2.REZ`, the only copy) | the resources of our images, resource by resource |
@@ -245,13 +245,15 @@ The seven lithshared libraries are scored against the prebuilt `.lib`s that
 came with Monolith's *NOLF Source Code v1.003* release
 (`LT2/lithshared/libs/Release/`), and the Debug build of RegMgr, which the
 Game of the Year `CShell.dll` links, against the release's
-`libs/Debug/RegMgr.lib`. Like the disc images, they are not in this
-repository: set `NOLF_SOURCE` to your extracted copy of the release (the
-directory holding `LT2/`).
+`libs/Debug/RegMgr.lib`. They are in this repository, in
+`reference/LT2/lithshared/libs/` (`reference/README.md` says what they are
+and why the retail binaries are not enough), and `NOLF_SOURCE` points there
+by default; set it to another copy of the release (the directory holding
+`LT2/`) to use that instead.
 They are checked against `shipped-libs.sha256`, and a mismatch is an error.
 
-Without `NOLF_SOURCE`, the engine images are still scored and checked, and
-the libraries are skipped with a note; `make progress-update` needs them.
+With `NOLF_SOURCE` empty, the engine images are still scored and checked,
+and the libraries are skipped with a note; `make progress-update` needs them.
 
 ## Files
 

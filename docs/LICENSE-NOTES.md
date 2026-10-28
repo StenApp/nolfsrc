@@ -8,8 +8,9 @@ This file says which is which; it is not legal advice and grants nothing.
 | Path | Origin | Terms |
 |---|---|---|
 | `src/game/` | **Monolith Productions**: *No One Lives Forever Source Code v1.003* (May 2001), unmodified except for the Game of the Year Edition's changes (reconstructed for this project from the retail GOTY `CShell.dll` and `Object.lto`, made in place and marked with `GOTY:` comments) and changes inside `#ifdef NOLFSRC_MODERN` blocks (the modern build's fixes and features, written for this project; the release build compiles none of them), including its Win32 `flex.exe` and `bison.exe` (GNU tools, used to generate the animation parser) | Monolith's end-user licence for the source release, reproduced in full in `src/MONOLITH-README.txt` (section IV). Read it: among other things it restricts redistribution of the source and requires add-ons to say they are not made or supported by Monolith. |
-| `src/LT2/` | **Monolith Productions**: the LithTech 2 SDK and shared-library headers from the same release, unmodified (Monolith's prebuilt libraries and the Miles and Bink binaries that came with it are left out) | as `src/game/` |
+| `src/LT2/` | **Monolith Productions**: the LithTech 2 SDK and shared-library headers from the same release, unmodified (the Miles and Bink binaries that came with it are left out; its prebuilt libraries are in `progress/reference/`) | as `src/game/` |
 | `src/MONOLITH-README.txt` | Monolith's readme for that release | as `src/game/` |
+| `progress/reference/LT2/lithshared/libs/` | **Monolith Productions**: the prebuilt lithshared libraries of the same release (Release and Debug builds), unmodified; never built into anything, only compared against by `make progress` (`progress/reference/README.md`) | as `src/game/` |
 | `src/lithshared/` | the LithTech shared libraries. Much of it (`stdlith/`, `CryptMgr/`, `RegMgr/`, `MFCStub/`, the `ButeMgr/` parser, `lith/`) is adapted from Monolith's later public source release for *No One Lives Forever 2*; the rest was written or reconstructed for this project, including `ztools/`, `rezmgr/` and `gamespy/` (a stand-in for the GameSpy middleware). `zlib/` is zlib | Monolith's code under the terms of the release it came from; zlib under the zlib licence; the rest as `src/engine/` |
 | `src/engine/` | the LithTech engine (`lithtech.exe`, `server.dll`, `d3d.ren`), the `NOLF.exe` launcher, the `NolfServ.exe` dedicated server, `ltmsg.dll` and `sres.dll`: written for this project, reconstructed from the retail binaries so that it compiles back to them. It implements Monolith's engine and interfaces, and `launcher.rc` / `nolfserv.rc` / `ltmsg.rc` reproduce the retail resource scripts (dialogs and strings). `NolfServ.exe` also compiles the game's `src/game/Shared/NetDefs.cpp` (Monolith's) and links the static MFC of the toolchain | written for this project; no licence is declared |
 | `src/nolfsrc/`, `src/modern/`, `build/`, `tools/`, `docker/`, `progress/`, `Makefile`, the documentation | written for this project | no licence is declared |
@@ -44,10 +45,6 @@ when the archives are copied; the retail executables are never copied into
 the game directory.
 
 ## Not in this repository, provided by you
-
-Optionally, for `make progress`: Monolith's *NOLF Source Code v1.003*
-release (`NOLF_SOURCE`), whose prebuilt lithshared libraries the scoring
-compares ours against. Only those seven `.lib` files are read.
 
 The compilers in `toolchains/` (Microsoft Visual C++ 6.0, Intel C/C++ 4.0;
 see `toolchains/README.md`), under their own licences.

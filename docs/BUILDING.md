@@ -99,11 +99,9 @@ make progress     # score the build against the retail binaries, function by
                   #   recorded as byte-identical in progress/identical.txt no
                   #   longer is, or if the text in an image's data differs from
                   #   the retail text in a way progress/data-known.txt does not
-                  #   list (tools/datacheck.py)
-make progress NOLF_SOURCE=<dir>  # the same, with the lithshared libraries
-                  #   (<dir>: the NOLF Source Code v1.003 release)
-make progress-update NOLF_SOURCE=<dir>   # record the score in progress/ and
-                  #   README.md
+                  #   list (tools/datacheck.py); our lithshared libraries too,
+                  #   against Monolith's prebuilt ones in progress/reference/
+make progress-update   # record the score in progress/ and README.md
 make shell        # a shell in the build container, at /repo
 make clean        # remove out/ and every build output in the source tree
 make distclean    # clean, and remove the docker image
