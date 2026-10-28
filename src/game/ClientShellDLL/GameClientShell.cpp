@@ -4165,8 +4165,16 @@ void CGameClientShell::ProcessHandshake(HMESSAGEREAD hMessage)
 			SAFE_STRCPY(szPlayerName, g_vtPlayerName.GetStr());
 			uint32 nNameKey = *((uint32*)szPlayerName);
 
+			// NEAR (648 vs 644). Shipped computes the shift once and the
+			// rotation twice: the second's shift is an expression that only
+			// folds to the first's late ((uint8)nNameKey & 0xf; with
+			// szPlayerName[0] & 0xf it is computed again, 655 bytes; with
+			// the same nNameKey & 0xf the two rotations fold away, 577).
+			// Left: shipped keeps nServerKey on the stack and the rotations'
+			// constants in ebp (a volatile nServerKey gives 644 bytes and
+			// 197 instructions, scheduled differently).
 			uint32 nXORMask = GAME_HANDSHAKE_ROTATE(nNameKey & 0xf);
-			nXORMask ^= GAME_HANDSHAKE_ROTATE(szPlayerName[0] & 0xf);
+			nXORMask ^= GAME_HANDSHAKE_ROTATE((uint8)nNameKey & 0xf);
 			nXORMask ^= nServerKey;
 			nXORMask ^= (uint32)this;
 
