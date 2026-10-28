@@ -87,7 +87,13 @@
 #define WEAPON_MOVE_INC_VALUE_SLOW		0.005f
 #define WEAPON_MOVE_INC_VALUE_FAST		0.02f
 
+#ifdef NOLFSRC_MODERN
+// M-P6-16: the player's position and rotation to the server 30 times a
+// second, as often as the server sends the world back (UpdateRate)
+#define DEFAULT_CSENDRATE				30.0f
+#else
 #define DEFAULT_CSENDRATE				7.0f
+#endif
 
 #define VK_TOGGLE_EDITMODE				VK_F2
 #define VK_TOGGLE_SCREENSHOTMODE		VK_F3
@@ -1001,7 +1007,12 @@ uint32 CGameClientShell::OnEngineInitialized(RMode *pMode, LTGUID *pAppGuid)
 	{
 		// Initialize the update rate.
         g_pLTClient->RunConsoleString("+UpdateRateInitted 1");
+#ifdef NOLFSRC_MODERN
+		// M-P6-16: 30 updates a second from the server, not 6
+        g_pLTClient->RunConsoleString("+UpdateRate 30");
+#else
         g_pLTClient->RunConsoleString("+UpdateRate 6");
+#endif
 	}
 
 #ifdef NOLFSRC_MODERN

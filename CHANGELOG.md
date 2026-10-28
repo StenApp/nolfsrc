@@ -12,6 +12,10 @@ covers each change in detail, under its item number (M-P1-01 and so on).
 
 Since the first public release:
 
+- **Other players move smoothly online.** Positions went to the server 7
+  times a second and back 6 times a second (2001's modem settings), so other
+  players skipped about; both are 30 now, and an existing config is raised
+  to 30 once.
 - **The launcher's sound can be switched off**: Advanced options, "Disable
   launcher sound". It still plays by default. (issue #47)
 - **The launcher keeps its settings in a file**, `launcher.ini` in the game

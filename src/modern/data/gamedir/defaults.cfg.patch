@@ -10,6 +10,15 @@
  "MaxWorldPoliesToDraw" "50000"
  "MasterPaletteMode" "1.000000"
  "Gamma" "1.000000"
+@@ -70,7 +71,7 @@
+ "DebugLevel" "0"
+ "soundenable" "1"
+ "musicenable" "1"
+-"updaterate" "10"
++"updaterate" "30"
+ "screenheight" "480"
+ "screenwidth" "640"
+ "screendepth" "16"
 @@ -166,6 +167,8 @@
  AddAction DecLayout 76
  AddAction TeamMessage 77

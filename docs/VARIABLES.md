@@ -68,7 +68,7 @@ the modern build.
 | `DisplayTriggers` | 0 | Server: 1 draws trigger volumes as yellow boxes. |
 | `MasterServer` | `master.openspy.net` | The master server for the internet server list and for hosted games (`host` or `host:port`; `none` turns it off). |
 | `NetJoinPassword` | (none) | The password `+connect` uses to join a locked server. |
-| `ModPatchNum` | 0 | The last modern config version applied (now 1.5); it drives one-time upgrades of an old config. Leave it alone. |
+| `ModPatchNum` | 0 | The last modern config version applied (now 1.6); it drives one-time upgrades of an old config. Leave it alone. |
 | `FramerateLock` | (gone) | The old on/off limit. An old config's `FramerateLock 0` becomes `FramerateLimit 0` once. |
 
 ## Display and window
@@ -177,8 +177,8 @@ the modern build.
 |---|---|---|
 | `NetPlayerName` | Player | Your name. Player setup. |
 | `NetPlayerModel`, `NetPlayerSkin`, `NetPlayerHead`, `NetPlayerTeam` | | Your character and team. Player setup. |
-| `UpdateRate` | 6 on first run | Server updates a second to ask for (2-60). Player setup: "Connection speed". |
-| `CSendRate` | 7 | Your position updates to the server a second. |
+| `UpdateRate` | 6 on first run (modern build: 30) | Server updates a second to ask for (2-60). Player setup: "Connection speed". |
+| `CSendRate` | 7 (modern build: 30) | Your position updates to the server a second. |
 | `AutoWeaponSwitch`, `AutoAmmoSwitch` | 1, 1 | Switch to a better weapon or ammo when you pick it up. |
 | `IgnoreTaunts` | 0 | 1 neither plays nor sends taunts. |
 | `connect` | | `+connect <address>` joins a server at start-up. |

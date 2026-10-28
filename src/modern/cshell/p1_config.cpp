@@ -170,6 +170,17 @@ void P1Config_AfterInit()
 			WriteConsoleInt("FramerateLimit", 0);
 	}
 
+	if (fSeen < 1.6f)
+	{
+		// M-P6-16: multiplayer updates 30 times a second each way; a
+		// config of 2001's defaults (UpdateRate 6, Player setup's
+		// slowest connections) had the other players skipping
+		if (GetConsoleInt("UpdateRate", 30) < 30)
+			WriteConsoleInt("UpdateRate", 30);
+		if (GetConsoleFloat("CSendRate", 30.0f) < 30.0f)
+			WriteConsoleFloat("CSendRate", 30.0f);
+	}
+
 	WriteConsoleFloat("ModPatchNum", P1_CONFIG_VERSION);
 	g_pLTClient->WriteConfigFile("autoexec.cfg");
 }
