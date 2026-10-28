@@ -10057,6 +10057,8 @@ d3d.ren	sub_10003ad0
 d3d.ren	sub_10003b50
 d3d.ren	sub_10003bb0
 d3d.ren	sub_10003bf0
+d3d.ren	sub_10003c40
+d3d.ren	sub_100051a0
 d3d.ren	sub_10008680
 d3d.ren	sub_10008a44
 d3d.ren	sub_10008da0
@@ -10350,6 +10352,7 @@ d3d.ren	sub_1002db00
 d3d.ren	sub_1002dd60
 d3d.ren	sub_1002dd6c
 d3d.ren	sub_1002e2d0
+d3d.ren	sub_1002e350
 d3d.ren	sub_1002e4c0
 d3d.ren	sub_1002e690
 d3d.ren	sub_1002e6c0
